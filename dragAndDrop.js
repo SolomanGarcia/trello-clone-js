@@ -5,21 +5,7 @@ export default function setup() {
     const selectedItem = e.target;
     const itemClone = selectedItem.cloneNode(true);
     const offset = setupDragItems(selectedItem, itemClone, e);
-
-    const mouseMoveFunction = (e) => {
-      positionClone(itemClone, e, offset);
-    };
-
-    document.addEventListener("mousemove", mouseMoveFunction);
-    document.addEventListener(
-      "mouseup",
-      () => {
-        document.removeEventListener("mousemove", mouseMoveFunction);
-        selectedItem.classList.remove("hide");
-        itemClone.remove();
-      },
-      { once: true }
-    );
+    setupDragEvents(selectedItem, itemClone, offset);
   });
 }
 
@@ -38,6 +24,23 @@ function setupDragItems(selectedItem, itemClone, e) {
   document.body.append(itemClone);
 
   return offset;
+}
+
+function setupDragEvents(selectedItem, itemClone, offset) {
+  const mouseMoveFunction = (e) => {
+    positionClone(itemClone, e, offset);
+  };
+
+  document.addEventListener("mousemove", mouseMoveFunction);
+  document.addEventListener(
+    "mouseup",
+    () => {
+      document.removeEventListener("mousemove", mouseMoveFunction);
+      selectedItem.classList.remove("hide");
+      itemClone.remove();
+    },
+    { once: true }
+  );
 }
 
 function positionClone(itemClone, mousePosition, offset) {
