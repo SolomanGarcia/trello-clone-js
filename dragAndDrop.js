@@ -4,13 +4,18 @@ export default function setup() {
   addGlobalEventListener("mousedown", "[data-draggable]", (e) => {
     const selectedItem = e.target;
     const itemClone = selectedItem.cloneNode(true);
+    const originalRect = selectedItem.getBoundingClientRect();
+    const offset = {
+      x: e.clientX - originalRect.left,
+      y: e.clientY - originalRect.top
+    };
     itemClone.classList.add("dragging");
-    positionClone(itemClone, e);
+    positionClone(itemClone, e, offset);
     document.body.append(itemClone);
     selectedItem.classList.add("hide");
 
     const mouseMoveFunction = (e) => {
-      positionClone(itemClone, e);
+      positionClone(itemClone, e, offset);
     };
 
     document.addEventListener("mousemove", mouseMoveFunction);
@@ -26,7 +31,7 @@ export default function setup() {
   });
 }
 
-function positionClone(itemClone, mousePosition) {
-  itemClone.style.top = `${mousePosition.clientY}px`;
-  itemClone.style.left = `${mousePosition.clientX}px`;
+function positionClone(itemClone, mousePosition, offset) {
+  itemClone.style.top = `${mousePosition.clientY - offset.y}px`;
+  itemClone.style.left = `${mousePosition.clientX - offset.x}px`;
 }
