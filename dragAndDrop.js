@@ -9,6 +9,7 @@ export default function setup() {
       x: e.clientX - originalRect.left,
       y: e.clientY - originalRect.top
     };
+    itemClone.style.width = `${originalRect.width}px`;
     itemClone.classList.add("dragging");
     positionClone(itemClone, e, offset);
     document.body.append(itemClone);
