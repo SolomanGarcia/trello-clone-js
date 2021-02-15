@@ -4,9 +4,14 @@ export default function setup() {
   addGlobalEventListener("mousedown", "[data-draggable]", (e) => {
     const selectedItem = e.target;
     const itemClone = selectedItem.cloneNode(true);
+    itemClone.classList.add("dragging");
+    positionClone(itemClone, e);
+    document.body.append(itemClone);
     selectedItem.classList.add("hide");
 
-    const mouseMoveFunction = () => {};
+    const mouseMoveFunction = (e) => {
+      positionClone(itemClone, e);
+    };
 
     document.addEventListener("mousemove", mouseMoveFunction);
     document.addEventListener(
@@ -14,10 +19,14 @@ export default function setup() {
       () => {
         document.removeEventListener("mousemove", mouseMoveFunction);
         selectedItem.classList.remove("hide");
+        itemClone.remove();
       },
       { once: true }
     );
   });
 }
 
-function positionClone() {}
+function positionClone(itemClone, mousePosition) {
+  itemClone.style.top = `${mousePosition.clientY}px`;
+  itemClone.style.left = `${mousePosition.clientX}px`;
+}
