@@ -2,19 +2,22 @@ import addGlobalEventListener from "./utils/addGlobalEventListener.js";
 
 export default function setup() {
   addGlobalEventListener("mousedown", "[data-draggable]", (e) => {
-    console.log("down");
-    const mouseMoveFunction = () => {
-      console.log("moved");
-    };
+    const selectedItem = e.target;
+    const itemClone = selectedItem.cloneNode(true);
+    selectedItem.classList.add("hide");
+
+    const mouseMoveFunction = () => {};
 
     document.addEventListener("mousemove", mouseMoveFunction);
     document.addEventListener(
       "mouseup",
       () => {
         document.removeEventListener("mousemove", mouseMoveFunction);
-        console.log("up");
+        selectedItem.classList.remove("hide");
       },
       { once: true }
     );
   });
 }
+
+function positionClone() {}
