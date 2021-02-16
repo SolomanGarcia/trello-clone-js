@@ -53,6 +53,11 @@ function setupDragEvents(selectedItem, itemClone, ghost, offset) {
     "mouseup",
     () => {
       document.removeEventListener("mousemove", mouseMoveFunction);
+      const dropZone = getDropZone(ghost);
+      if (dropZone) {
+        dropZone.insertBefore(selectedItem, ghost);
+      }
+
       stopDrag(selectedItem, itemClone, ghost);
     },
     { once: true }
