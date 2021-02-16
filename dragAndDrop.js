@@ -4,12 +4,13 @@ export default function setup() {
   addGlobalEventListener("mousedown", "[data-draggable]", (e) => {
     const selectedItem = e.target;
     const itemClone = selectedItem.cloneNode(true);
-    const offset = setupDragItems(selectedItem, itemClone, e);
+    const ghost = selectedItem.cloneNode();
+    const offset = setupDragItems(selectedItem, itemClone, ghost, e);
     setupDragEvents(selectedItem, itemClone, offset);
   });
 }
 
-function setupDragItems(selectedItem, itemClone, e) {
+function setupDragItems(selectedItem, itemClone, ghost, e) {
   const originalRect = selectedItem.getBoundingClientRect();
   const offset = {
     x: e.clientX - originalRect.left,
@@ -22,6 +23,11 @@ function setupDragItems(selectedItem, itemClone, e) {
   itemClone.classList.add("dragging");
   positionClone(itemClone, e, offset);
   document.body.append(itemClone);
+
+  ghost.style.height = `${originalRect.height}px`;
+  ghost.classList.add("ghost");
+  ghost.innerHTML = "";
+  selectedItem.parentElement.insertBefore(ghost, selectedItem);
 
   return offset;
 }
