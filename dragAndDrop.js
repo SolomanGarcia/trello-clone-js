@@ -34,7 +34,10 @@ function setupDragItems(selectedItem, itemClone, ghost, e) {
 
 function setupDragEvents(selectedItem, itemClone, ghost, offset) {
   const mouseMoveFunction = (e) => {
+    const dropZone = getDropZone(e.target);
     positionClone(itemClone, e, offset);
+    if (dropZone == null) return;
+    dropZone.append(ghost);
   };
 
   document.addEventListener("mousemove", mouseMoveFunction);
@@ -57,4 +60,12 @@ function stopDrag(selectedItem, itemClone, ghost) {
   selectedItem.classList.remove("hide");
   itemClone.remove();
   ghost.remove();
+}
+
+function getDropZone(element) {
+  if (element.matches("[data-drop-zone]")) {
+    return element;
+  } else {
+    return element.closest("[data-drop-zone]");
+  }
 }
