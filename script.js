@@ -21,13 +21,22 @@ function loadLanes() {
 }
 
 function renderTasks() {
-  Object.entries().forEach((obj) => {
+  Object.entries(lanes).forEach((obj) => {
     const laneId = obj[0];
     const tasks = obj[1];
-    const lane = document.querySelector(`[data-lane-id-"${laneId}"]`);
+    const lane = document.querySelector(`[data-lane-id="${laneId}"]`);
     tasks.forEach((task) => {
       const taskElement = createTaskElement(task);
       lane.append(taskElement);
     });
   });
+}
+
+function createTaskElement(task) {
+  const element = document.createElement("div");
+  element.id = task.id;
+  element.innerText = task.text;
+  element.classList.add("task");
+  element.dataset.draggable = true;
+  return element;
 }
