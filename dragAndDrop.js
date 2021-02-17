@@ -1,12 +1,12 @@
 import addGlobalEventListener from "./utils/addGlobalEventListener.js";
 
-export default function setup() {
+export default function setup(onDragComplete) {
   addGlobalEventListener("mousedown", "[data-draggable]", (e) => {
     const selectedItem = e.target;
     const itemClone = selectedItem.cloneNode(true);
     const ghost = selectedItem.cloneNode();
     const offset = setupDragItems(selectedItem, itemClone, ghost, e);
-    setupDragEvents(selectedItem, itemClone, ghost, offset);
+    setupDragEvents(selectedItem, itemClone, ghost, offset, onDragComplete);
   });
 }
 
@@ -32,7 +32,13 @@ function setupDragItems(selectedItem, itemClone, ghost, e) {
   return offset;
 }
 
-function setupDragEvents(selectedItem, itemClone, ghost, offset) {
+function setupDragEvents(
+  selectedItem,
+  itemClone,
+  ghost,
+  offset,
+  onDragComplete
+) {
   const mouseMoveFunction = (e) => {
     const dropZone = getDropZone(e.target);
     positionClone(itemClone, e, offset);
@@ -55,6 +61,12 @@ function setupDragEvents(selectedItem, itemClone, ghost, offset) {
       document.removeEventListener("mousemove", mouseMoveFunction);
       const dropZone = getDropZone(ghost);
       if (dropZone) {
+        onDragComplete({
+          startZone: getDropZone(selectedItem),
+          endZone: dropZone,
+          dragElement: selectedItem,
+          index: Array.from(dropZone.children).indexOf(ghost)
+        });
         dropZone.insertBefore(selectedItem, ghost);
       }
 
