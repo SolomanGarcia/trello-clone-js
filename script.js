@@ -13,7 +13,18 @@ renderTasks();
 
 setupDragAndDrop(onDragComplete);
 
-function onDragComplete(e) {}
+function onDragComplete(e) {
+  const startLaneId = e.startZone.dataset.laneId;
+  const endLaneId = e.endZone.dataset.laneId;
+  const startLaneTasks = lanes[startLaneId];
+  const endLaneTasks = lanes[endLaneId];
+
+  const task = startLaneTasks.find((t) => t.id === e.dragElement.id);
+  startLaneTasks.splice(startLaneTasks.indexOf(task), 1);
+  endLaneTasks.splice(e.index, 0, task);
+
+  saveLanes();
+}
 
 function loadLanes() {
   const lanesJson = localStorage.getItem(LANES_STORAGE_KEY);
