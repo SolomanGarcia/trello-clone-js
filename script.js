@@ -9,6 +9,7 @@ const DEFAULT_LANES = {
   done: []
 };
 const lanes = loadLanes();
+renderTasks();
 
 setupDragAndDrop(onDragComplete);
 
@@ -17,4 +18,16 @@ function onDragComplete(e) {}
 function loadLanes() {
   const lanesJson = localStorage.getItem(LANES_STORAGE_KEY);
   return JSON.parse(lanesJson) || DEFAULT_LANES;
+}
+
+function renderTasks() {
+  Object.entries().forEach((obj) => {
+    const laneId = obj[0];
+    const tasks = obj[1];
+    const lane = document.querySelector(`[data-lane-id-"${laneId}"]`);
+    tasks.forEach((task) => {
+      const taskElement = createTaskElement(task);
+      lane.append(taskElement);
+    });
+  });
 }
