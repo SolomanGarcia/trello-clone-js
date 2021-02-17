@@ -4,7 +4,7 @@ import { v4 as uuidV4 } from "uuid";
 const STORAGE_PREFIX = "TRELLO_CLONE";
 const LANES_STORAGE_KEY = `${STORAGE_PREFIX}-lanes`;
 const DEFAULT_LANES = {
-  backlog: [{ id: uuidV4, text: "Create your first task" }],
+  backlog: [{ id: uuidV4(), text: "Create your first task" }],
   doing: [],
   done: []
 };
@@ -29,6 +29,10 @@ function onDragComplete(e) {
 function loadLanes() {
   const lanesJson = localStorage.getItem(LANES_STORAGE_KEY);
   return JSON.parse(lanesJson) || DEFAULT_LANES;
+}
+
+function saveLanes() {
+  localStorage.setItem(LANES_STORAGE_KEY, JSON.stringify(lanes));
 }
 
 function renderTasks() {
