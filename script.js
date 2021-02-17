@@ -1,3 +1,4 @@
+import addGlobalEventListener from "./utils/addGlobalEventListener.js";
 import setupDragAndDrop from "./dragAndDrop.js";
 import { v4 as uuidV4 } from "uuid";
 
@@ -12,6 +13,24 @@ const lanes = loadLanes();
 renderTasks();
 
 setupDragAndDrop(onDragComplete);
+
+addGlobalEventListener("submit", "[data-task-form]", (e) => {
+  e.preventDefault();
+
+  const taskInput = e.target.querySelector("[data-task-input]");
+  const taskText = taskInput.value;
+  if (taskText === "") return;
+
+  const task = { id: uuidV4(), text: taskText };
+  const laneElement = e.target.closest(".lane").querySelector("[data-lane-id]");
+  lanes[laneElement.dataset.laneId].push(task);
+
+  const taskElement = createTaskElement(task);
+  laneElement.append(taskElement);
+  taskInput.value = "";
+
+  saveLanes();
+});
 
 function onDragComplete(e) {
   const startLaneId = e.startZone.dataset.laneId;
